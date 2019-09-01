@@ -11,6 +11,7 @@ function EditTable() {
     };
     const d = new Date();
     d.setHours(d.getHours() - 1);
+    // set default date to 1 hour ago
     const [edits, setEdits] = useState([]);
     const [date, setDate] = useState(d);
 
@@ -21,7 +22,7 @@ function EditTable() {
         fetch(
             `https://en.wikipedia.org/w/api.php?` +
             `&origin=*&action=query&list=recentchanges&format=json&rcstart=${date.toISOString()}` + 
-            `&rcprop=title|ids|user|userid` +
+            `&rcprop=title|ids|user|userid|comment|parsedcomment` +
             `&rcnamespace=0&rcshow=!minor%7C!bot%7C!anon%7C!redirect&rclimit=50&rcdir=newer`,
             options
         )
@@ -41,8 +42,8 @@ function EditTable() {
                             <tr>
                                 <th>Title</th>
                                 <th>revID</th>
-                                <th>old revID</th>
-                                <th>Edited on</th>
+                                <th>Page ID</th>
+                                <th>Edited By</th>
                                 <th>View</th>
                             </tr>
                         </thead>
@@ -51,8 +52,8 @@ function EditTable() {
                                 <tr key={edit.pageid}>
                                     <td>{edit.title}</td>
                                     <td>{edit.revid}</td>
-                                    <td>{edit.old_revid}</td>
-                                    <td>{edit.timestamp}</td>
+                                    <td>{edit.pageid}</td>
+                                    <td>{edit.user}</td>
                                     <th>
                                         <Link to={`/e/${edit.pageid}`}>
                                             <button className="btn btn-info">
