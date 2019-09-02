@@ -14,6 +14,7 @@ function EditTable() {
     // set default date to 1 hour ago
 
     const [edits, setEdits] = useState([]);
+    const [pageSize, setPageSize] = useState('50');
     const [startTime, setStartTime] = useState(d);
     const [pagination, setPagination] = useState();
     const [sortBy, setSortBy] = useState('newer');
@@ -26,7 +27,7 @@ function EditTable() {
             `https://en.wikipedia.org/w/api.php?` +
             `&origin=*&action=query&list=recentchanges&format=json&rcstart=${startTime.toISOString()}` + 
             `&rcprop=title|ids|user|userid|comment|parsedcomment|loginfo|tags` +
-            `&rcnamespace=0&rcshow=!minor%7C!bot%7C!anon%7C!redirect&rclimit=50&rcdir=${sortBy}`,
+            `&rcnamespace=0&rcshow=!minor%7C!bot%7C!anon%7C!redirect&rclimit=${pageSize}&rcdir=${sortBy}`,
             options
         )
         .then(response => response.json())
@@ -46,14 +47,13 @@ function EditTable() {
         }
     }
 
-    const newStartTime = event => console.log(event, typeof event);
-
     return (
         <div className="row justify-content-center">
             <div className="col-10">
                 <NavBar
                     onSortByChange={$event => setSortBy($event)}
                     onStartTimeChange={$event => handleStartTime($event)}
+                    onPageSizeChange={$event => setPageSize($event)}
                 />
                 {edits.length ? 
                     (<div>
