@@ -1,68 +1,36 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Kobayashi Maru Takehome Project
 
-## Available Scripts
+### For Learning Tapestry
 
-In the project directory, you can run:
+- [ ] index paginates data
+- [x] configurable pagination params
+- [x] displays additional data
+- [x] details page loads data from wiki api
+- [x] project includes tests (jest and enzyme)
+- [x] project includes css and css framework (bootstrap)
+- [ ] pages are stand-alone HTML
+- [x] uses create-react-app
+- [x] uses fetch to pull JSON data
+- [x] uses react hooks to manage state
+- [x] uses react-router to handle routing
 
-### `npm start`
+I was successful in implementing an app that was able to load and render articles and information based off of wikipedia's API listing recent changes.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+If I had more time to complete the project, I would have done the following:
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+1. __Paginating Recent Edits__
+I was able to get it to load previous pages, but I did not have enough time to really work through the logic on how to paginate properly. As it stands, when you click 'previous' and 'next', it will load data from an hour earlier, and set the first edit you see to be the one after the last one on the page that was loaded before. This does not give the user predictable pagination results. If allowed more time, I would have tried to figure out some logic with the `&rclimit` query
 
-### `npm test`
+2. __Stand Alone HTML__
+My idea of doing this while still using create-react-app was sort of convoluted but may have worked. If given more time I would have tried to create a separate html file for the individual page edit, and have react loaded via a cdn so that it could be opened straight into the browser. I was thinking of having script tags with empty src attributes that would load the cdn url when another script checks that 'react' is not defined. I'm not sure how I would have handled the routing to a completely separate html page for a sinlge-page app (maybe this was what was part of what makes it a Kobayashi Maru), but I was imagining I would also programmatically sub out the react `<Link>` tags with standard `<a>` tags with hrefs to the other file.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. __Tests__
+My tests were not nearly thorough enough, and some of them had quirks which did not let them pass. I was trying to test if an object had default state, but, having never specifically used enzyme with reack hook components, I was getting an error saying I can only call state() on class components. I would add more testing functionality to make sure that we get the right number of edits back according to the state of our user configured preference, as well as more tests making sure that the input values were correct
 
-### `npm run build`
+4. __Safe Extract Rendering__
+One thing that I would have liked to do more safely was render the html that comes from wikipedia only if it doesn't have script tags. It would be better to go through and actually parse all of the values that come back in the second API call before rendering it with `dangerouslySetInnerHTML` and make sure that there is no malicious code that automatically goes into our DOM tree. It would also be useful to set up a test that includes script tags that passes if the output is not actually rendered.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+5.__Timepicker UI and functionality__
+I installed a timepicker quickly in order to prototype how picking a user configurable start time would work. I found one with a good reputation on github, but was surprised at how difficult it was to customize the UI styles. I left the styles as is but would love to go back and either figure out how to theme it with bootstrap, or make my own custom picker that works with the theme. Additionally the input validation seemed like it had trouble actually working. It would release null when the time was bad, the the user did not see when the event value was actually null, making the user experience confusing
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Thank you for the opportunity you have given me to work on this project. I have never used the wikiMedia API before and loved how fun and powerful it is. I am excited to dig deeper into different possibilities with it.

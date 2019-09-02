@@ -14,3 +14,5 @@ it('give valid time inputs', () => {
     wrapper.find(TimePicker).simulate('change', {target: {value: '12:0000000'}});
     expect(changeMock).toBeCalledWith(null);
 })
+
+// currently the time picker is displaying values that are not valid times. testing to see if invalid events are reset to null

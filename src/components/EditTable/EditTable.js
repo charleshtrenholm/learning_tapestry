@@ -16,7 +16,7 @@ function EditTable() {
     const [edits, setEdits] = useState([]);
     const [pageSize, setPageSize] = useState('50');
     const [startTime, setStartTime] = useState(d);
-    const [pagination, setPagination] = useState();
+    const [pagination, setPagination] = useState('');
     const [sortBy, setSortBy] = useState('newer');
 
     useEffect(() => {
@@ -25,8 +25,8 @@ function EditTable() {
         }
         fetch(
             `https://en.wikipedia.org/w/api.php?` +
-            `&origin=*&action=query&list=recentchanges&format=json&rcstart=${startTime.toISOString()}` + 
-            `&rcprop=title|ids|user|userid|comment|parsedcomment|loginfo|tags` +
+            `&origin=*&action=query&list=recentchanges&format=json&rcstart=${startTime.toISOString()}${pagination}` +
+            `&rcprop=title|ids|user|userid|comment|parsedcomment|loginfo|tags|timestamp` +
             `&rcnamespace=0&rcshow=!minor%7C!bot%7C!anon%7C!redirect&rclimit=${pageSize}&rcdir=${sortBy}`,
             options
         )
@@ -35,6 +35,20 @@ function EditTable() {
             setEdits(result.query.recentchanges);
         });
     })
+
+    const handlePagination = previous => {
+        if (previous) {
+            const d = new Date(startTime);
+            d.setHours(d.getHours() - 1) // takes back an hour
+            setStartTime(d);
+            setPagination('&rcend=' + edits[edits.length - 1].timestamp) // display all after last edit on page
+        } else {
+            const d = new Date(startTime);
+            d.setHours(d.getHours() + 1);
+            setStartTime(d);
+            setPagination('&rcend=' + edits[0].timestamp);
+        }
+    }
 
     const handleStartTime= $event => {
         if($event) { // clear button emits null
@@ -64,6 +78,7 @@ function EditTable() {
                                     <th>revID</th>
                                     <th>Page ID</th>
                                     <th>Edited By</th>
+                                    <th>Date</th>
                                     <th>View</th>
                                 </tr>
                             </thead>
@@ -74,9 +89,10 @@ function EditTable() {
                                         <td>{edit.revid}</td>
                                         <td>{edit.pageid}</td>
                                         <td>{edit.user}</td>
+                                        <td>{edit.timestamp}</td>
                                         <th>
                                             <Link to={{
-                                                pathname: `/e/${edit.rcid}`,
+                                                pathname: `/e/${edit.pageid}`,
                                                 state: {
                                                     comment: edit.comment,
                                                     title: edit.title,
@@ -97,9 +113,13 @@ function EditTable() {
                             <span 
                                 className="col-2 offset-1" 
                                 style={{border: '1px solid grey', borderRadius: '10px', marginBottom: '20px'}}
-                                onClick={setPagination}
+                                onClick={() => handlePagination(true)}
                                 >&laquo; previous</span>
-                            <span className="col-2 offset-6" style={{border: '1px solid grey', borderRadius: '10px', marginBottom: '20px'}}>&raquo; next</span>
+                            <span 
+                                className="col-2 offset-6" 
+                                style={{border: '1px solid grey', borderRadius: '10px', marginBottom: '20px'}}
+                                onClick={() => handlePagination(false)}
+                                >&raquo; next</span>
                         </div>
                     </div>
                     )
