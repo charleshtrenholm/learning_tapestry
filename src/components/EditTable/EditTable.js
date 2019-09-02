@@ -12,6 +12,7 @@ function EditTable() {
     const d = new Date();
     d.setHours(d.getHours() - 1);
     // set default date to 1 hour ago
+
     const [edits, setEdits] = useState([]);
     const [date, setDate] = useState(d);
 
@@ -22,11 +23,12 @@ function EditTable() {
         fetch(
             `https://en.wikipedia.org/w/api.php?` +
             `&origin=*&action=query&list=recentchanges&format=json&rcstart=${date.toISOString()}` + 
-            `&rcprop=title|ids|user|userid|comment|parsedcomment` +
+            `&rcprop=title|ids|user|userid|comment|parsedcomment|loginfo|tags` +
             `&rcnamespace=0&rcshow=!minor%7C!bot%7C!anon%7C!redirect&rclimit=50&rcdir=newer`,
             options
         )
         .then(response => response.json())
+        // .then(response => console.log(response.json()))
         .then(result => {
             setEdits(result.query.recentchanges);
         });
@@ -49,13 +51,20 @@ function EditTable() {
                         </thead>
                         <tbody>
                             {edits.map(edit => (
-                                <tr key={edit.pageid}>
+                                <tr key={edit.rcid}>
                                     <td>{edit.title}</td>
                                     <td>{edit.revid}</td>
                                     <td>{edit.pageid}</td>
                                     <td>{edit.user}</td>
                                     <th>
-                                        <Link to={`/e/${edit.pageid}`}>
+                                        <Link to={{
+                                            pathname: `/e/${edit.rcid}`,
+                                            state: {
+                                                comment: edit.comment,
+                                                title: edit.title,
+                                                user: edit.user,
+                                            }
+                                        }}>
                                             <button className="btn btn-info">
                                             View
                                             </button>
