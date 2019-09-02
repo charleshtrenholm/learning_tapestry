@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import EditTable from  './EditTable';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 
 
